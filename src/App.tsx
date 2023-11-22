@@ -1,7 +1,9 @@
+import { KanbanBoard } from './components/KanbanBoard';
+
 function App() {
   return (
     <>
-      <div></div>
+      <KanbanBoard />
     </>
   );
 }
