@@ -1,6 +1,9 @@
-import { Trash2Icon } from 'lucide-react';
-import { Task } from '../types';
 import { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { Trash2Icon } from 'lucide-react';
+import { CSS } from '@dnd-kit/utilities';
+
+import { Task } from '../types';
 
 type TaskCardProps = {
   task: Task;
@@ -12,9 +15,37 @@ const TaskCard = ({ task, deleteTask, updateTask }: TaskCardProps) => {
   const [editMode, setEditMode] = useState(false);
   const [mouseIsOver, setMouseIsOver] = useState(false);
 
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: task.id,
+    data: {
+      type: 'Task',
+      task,
+    },
+    disabled: editMode,
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Transform.toString(transform),
+  };
+
+  if (isDragging) {
+    return (
+      <div
+        ref={setNodeRef}
+        style={style}
+        className="border-2 border-orange-500 rounded-md min-h-[100px] flex flex-col p-2 bg-orange-100"
+      />
+    );
+  }
+
   return (
     <div
-      className="p-4 bg-slate-200 rounded-md flex relative min-h-[100px]"
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="p-4 bg-slate-200 rounded-md flex relative min-h-[100px] cursor-grab"
       onMouseOver={() => setMouseIsOver(true)}
       onMouseLeave={() => setMouseIsOver(false)}
     >

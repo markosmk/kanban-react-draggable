@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useSortable } from '@dnd-kit/sortable';
+import { useMemo, useState } from 'react';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { PlusCircleIcon, Trash2Icon } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
 
@@ -25,6 +25,7 @@ const ColumnContent = ({
   deleteTask,
   updateTask,
 }: ColumnContentProps) => {
+  const tasksId = useMemo(() => tasks.map((task) => task.id), [tasks]);
   const [editMode, setEditMode] = useState(false);
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
@@ -90,8 +91,10 @@ const ColumnContent = ({
 
       {/* Tasks */}
       <div className="flex flex-grow flex-col gap-2 my-2 overflow-x-hidden overflow-y-auto">
-        {tasks &&
-          tasks.map((task) => <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />)}
+        <SortableContext items={tasksId}>
+          {tasks &&
+            tasks.map((task) => <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />)}
+        </SortableContext>
       </div>
 
       {/* footer */}
