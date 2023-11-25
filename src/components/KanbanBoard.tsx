@@ -13,7 +13,7 @@ import { SortableContext, arrayMove } from '@dnd-kit/sortable';
 import { PlusCircleIcon } from 'lucide-react';
 import { nanoid } from 'nanoid';
 
-import { Column } from '../types';
+import { Column, Task } from '../types';
 import { ColumnContent } from './ColumnContent';
 
 const defaultCols: Column[] = [
@@ -33,6 +33,8 @@ const defaultCols: Column[] = [
 
 const KanbanBoard = () => {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
 
@@ -44,6 +46,22 @@ const KanbanBoard = () => {
     })
   );
 
+  /** TASKS */
+  const createTask = (columnId: string) => {
+    const newTask: Task = {
+      id: nanoid(),
+      columnId,
+      content: 'Task ' + (tasks.length + 1),
+    };
+    setTasks((prev) => [...prev, newTask]);
+  };
+
+  const deleteTask = (taskId: string) => {
+    const filteredTasks = tasks.filter((task) => task.id !== taskId);
+    setTasks(filteredTasks);
+  };
+
+  /** COLUMNS */
   const createColumn = () => {
     const newCol: Column = {
       id: nanoid(),
@@ -94,7 +112,15 @@ const KanbanBoard = () => {
           <div className="flex gap-4">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
-                <ColumnContent key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} />
+                <ColumnContent
+                  key={col.id}
+                  column={col}
+                  deleteColumn={deleteColumn}
+                  updateColumn={updateColumn}
+                  createTask={createTask}
+                  tasks={tasks.filter((task) => task.columnId === col.id)}
+                  deleteTask={deleteTask}
+                />
               ))}
             </SortableContext>
           </div>
@@ -103,7 +129,14 @@ const KanbanBoard = () => {
         {createPortal(
           <DragOverlay>
             {activeColumn && (
-              <ColumnContent column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} />
+              <ColumnContent
+                column={activeColumn}
+                deleteColumn={deleteColumn}
+                updateColumn={updateColumn}
+                createTask={createTask}
+                tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+                deleteTask={deleteTask}
+              />
             )}
           </DragOverlay>,
           document.body
@@ -111,7 +144,7 @@ const KanbanBoard = () => {
       </DndContext>
       <div className="absolute top-4 right-4">
         <button
-          className="rounded-lg p-3 bg-slate-500 text-white flex items-center gap-2 active:translate-y-1 transition-transform  active:scale-95"
+          className="rounded-lg p-3 bg-slate-500 text-white flex items-center gap-2 active:translate-y-1 transition-transform active:scale-95"
           onClick={createColumn}
         >
           <PlusCircleIcon />

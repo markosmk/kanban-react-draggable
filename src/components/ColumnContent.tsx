@@ -1,17 +1,21 @@
 import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
-import { Trash2Icon } from 'lucide-react';
+import { PlusCircleIcon, Trash2Icon } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
 
-import { Column } from '../types';
+import { Column, Task } from '../types';
+import { TaskCard } from './TaskCard';
 
 type ColumnContentProps = {
   column: Column;
   deleteColumn: (id: string) => void;
   updateColumn: (id: string, title: string) => void;
+  createTask: (id: string) => void;
+  tasks: Task[];
+  deleteTask: (id: string) => void;
 };
 
-const ColumnContent = ({ column, deleteColumn, updateColumn }: ColumnContentProps) => {
+const ColumnContent = ({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask }: ColumnContentProps) => {
   const [editMode, setEditMode] = useState(false);
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
@@ -76,10 +80,20 @@ const ColumnContent = ({ column, deleteColumn, updateColumn }: ColumnContentProp
       </div>
 
       {/* Tasks */}
-      <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">tasks</div>
+      <div className="flex flex-grow flex-col gap-2 my-2 overflow-x-hidden overflow-y-auto">
+        {tasks && tasks.map((task) => <TaskCard key={task.id} task={task} deleteTask={deleteTask} />)}
+      </div>
 
       {/* footer */}
-      <div>footer</div>
+      <div>
+        <button
+          className="rounded-lg p-3 bg-slate-500 text-white flex items-center gap-2 active:translate-y-1 transition-transform active:scale-95 w-full hover:bg-slate-700"
+          onClick={() => createTask(column.id)}
+        >
+          <PlusCircleIcon />
+          <span className="font-bold text-sm">Add New Task</span>
+        </button>
+      </div>
     </div>
   );
 };
