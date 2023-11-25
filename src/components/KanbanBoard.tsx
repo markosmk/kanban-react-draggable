@@ -87,13 +87,6 @@ const KanbanBoard = () => {
               ))}
             </SortableContext>
           </div>
-          <button
-            className="rounded-lg border-2 p-4 bg-black text-white font-bold h-16 w-60 min-w-[240px] flex gap-2"
-            onClick={createColumn}
-          >
-            <PlusCircleIcon />
-            Add Column
-          </button>
         </div>
 
         {createPortal(
@@ -103,6 +96,15 @@ const KanbanBoard = () => {
           document.body
         )}
       </DndContext>
+      <div className="absolute top-4 right-4">
+        <button
+          className="rounded-lg p-3 bg-slate-500 text-white flex items-center gap-2 active:translate-y-1 transition-transform  active:scale-95"
+          onClick={createColumn}
+        >
+          <PlusCircleIcon />
+          <span className="font-bold text-sm">Add Column</span>
+        </button>
+      </div>
     </div>
   );
 };
