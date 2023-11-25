@@ -14,7 +14,7 @@ import { PlusCircleIcon } from 'lucide-react';
 import { nanoid } from 'nanoid';
 
 import { Column } from '../types';
-import ColumnContent from './ColumnContent';
+import { ColumnContent } from './ColumnContent';
 
 const defaultCols: Column[] = [
   {
@@ -31,7 +31,7 @@ const defaultCols: Column[] = [
   },
 ];
 
-function KanbanBoard() {
+const KanbanBoard = () => {
   const [columns, setColumns] = useState<Column[]>(defaultCols);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
@@ -105,6 +105,6 @@ function KanbanBoard() {
       </DndContext>
     </div>
   );
-}
+};
 
-export default KanbanBoard;
+export { KanbanBoard };

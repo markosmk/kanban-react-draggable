@@ -9,7 +9,7 @@ type ColumnContentProps = {
   deleteColumn: (id: string) => void;
 };
 
-function ColumnContent({ column, deleteColumn }: ColumnContentProps) {
+const ColumnContent = ({ column, deleteColumn }: ColumnContentProps) => {
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
     data: {
@@ -68,6 +68,6 @@ function ColumnContent({ column, deleteColumn }: ColumnContentProps) {
       <div>footer</div>
     </div>
   );
-}
+};
 
-export default ColumnContent;
+export { ColumnContent };
