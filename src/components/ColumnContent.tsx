@@ -13,9 +13,18 @@ type ColumnContentProps = {
   createTask: (id: string) => void;
   tasks: Task[];
   deleteTask: (id: string) => void;
+  updateTask: (id: string, content: string) => void;
 };
 
-const ColumnContent = ({ column, deleteColumn, updateColumn, createTask, tasks, deleteTask }: ColumnContentProps) => {
+const ColumnContent = ({
+  column,
+  deleteColumn,
+  updateColumn,
+  createTask,
+  tasks,
+  deleteTask,
+  updateTask,
+}: ColumnContentProps) => {
   const [editMode, setEditMode] = useState(false);
   const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
     id: column.id,
@@ -81,7 +90,8 @@ const ColumnContent = ({ column, deleteColumn, updateColumn, createTask, tasks, 
 
       {/* Tasks */}
       <div className="flex flex-grow flex-col gap-2 my-2 overflow-x-hidden overflow-y-auto">
-        {tasks && tasks.map((task) => <TaskCard key={task.id} task={task} deleteTask={deleteTask} />)}
+        {tasks &&
+          tasks.map((task) => <TaskCard key={task.id} task={task} deleteTask={deleteTask} updateTask={updateTask} />)}
       </div>
 
       {/* footer */}

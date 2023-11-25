@@ -61,6 +61,16 @@ const KanbanBoard = () => {
     setTasks(filteredTasks);
   };
 
+  const updateTask = (taskId: string, content: string) => {
+    const newTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, content };
+      }
+      return task;
+    });
+    setTasks(newTasks);
+  };
+
   /** COLUMNS */
   const createColumn = () => {
     const newCol: Column = {
@@ -120,6 +130,7 @@ const KanbanBoard = () => {
                   createTask={createTask}
                   tasks={tasks.filter((task) => task.columnId === col.id)}
                   deleteTask={deleteTask}
+                  updateTask={updateTask}
                 />
               ))}
             </SortableContext>
@@ -136,6 +147,7 @@ const KanbanBoard = () => {
                 createTask={createTask}
                 tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
                 deleteTask={deleteTask}
+                updateTask={updateTask}
               />
             )}
           </DragOverlay>,
